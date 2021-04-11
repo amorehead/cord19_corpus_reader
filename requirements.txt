@@ -1,0 +1,2 @@
+# CORD-19 Corpus Reader requirements
+nltk==3.6.1
