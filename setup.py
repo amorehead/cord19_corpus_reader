@@ -9,6 +9,6 @@ setup(
     author='Alex Morehead',
     author_email='alex.morehead@gmail.com',
     url='https://github.com/amorehead/cord19_corpus_reader',
-    install_requires=['nlkt'],
+    install_requires=['nltk'],
     packages=find_packages(),
 )
