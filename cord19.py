@@ -1,13 +1,16 @@
 ################################################################################
 #                                                                              #
-#    CS 7740                                                                   #
-#    Fall 2020                                                                 #
+#    CS 7740/8740                                                              #
+#    Fall 2020 - Spring 2021                                                   #
 #                                                                              #
 #    Class Project - CORD-19 Corpus Reader                                     #
 #    cord19.py                                                                 #
 #                                                                              #
 #    Started: Jason James                                                      #
 #    2020-9-15                                                                 #
+#                                                                              #
+#    Modified: Alex Morehead & Jian Liu                                        #
+#    2021-4-12                                                                 #
 #                                                                              #
 ################################################################################
 
@@ -17,15 +20,14 @@ A reader for the CORD-19 corpus.
 
 import csv
 import json
-import os
-
 import nltk.data
-from nltk.tokenize import *
-from nltk.corpus.reader.util import *
+import os
 from nltk.corpus.reader.api import *
+from nltk.corpus.reader.util import *
+from nltk.tokenize import *
+
 
 class CORD19CorpusReader(CorpusReader):
-
     """
     Reader for the CORD19 corpus:
     https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge .
@@ -38,27 +40,26 @@ class CORD19CorpusReader(CorpusReader):
     CorpusView = StreamBackedCorpusView
 
     def __init__(
-        self,
-        root,
-        # Don't allow files to be explicitly specified anymore.
-        # TODO: Make it where it's alright for a list of files?
-        fileids,
-        word_tokenizer = WordPunctTokenizer(),
-        sent_tokenizer = nltk.data.LazyLoader("tokenizers/punkt/english.pickle"),
-        para_block_reader = read_blankline_block,
-        encoding = "utf8",
-        include_titles = True,
-        include_abstracts = True,
-        include_bodies = True,
-        # TODO: What to include for the bibliographies?
-        # include_bibliographies = True,
-        prefer_pdf_parses = True,
-        prefer_pmc_parses = False
+            self,
+            root,
+            # Don't allow files to be explicitly specified anymore.
+            # TODO: Make it where it's alright for a list of files?
+            fileids,
+            word_tokenizer=WordPunctTokenizer(),
+            sent_tokenizer=nltk.data.LazyLoader("tokenizers/punkt/english.pickle"),
+            para_block_reader=read_blankline_block,
+            encoding="utf8",
+            include_titles=True,
+            include_abstracts=True,
+            include_bodies=True,
+            # TODO: What to include for the bibliographies?
+            # include_bibliographies = True,
+            prefer_pdf_parses=True,
+            prefer_pmc_parses=False
     ):
         # TODO: Gather up the list of fileids to pass into the constructor.
 
         CorpusReader.__init__(self, root, fileids, encoding)
-
 
         # print('self.fileids:', self._fileids)
 
@@ -74,6 +75,7 @@ class CORD19CorpusReader(CorpusReader):
         # Save location of the metadata.csv file.
         self._metadata_file = root + 'metadata.csv'
 
+        # Record encoding scheme
         self._encoding = encoding
 
         # Check if don't want both PDF parses and PMC parses.
@@ -83,7 +85,7 @@ class CORD19CorpusReader(CorpusReader):
             metadata_dictionary = defaultdict(list)
 
             # Open the CSV file.
-            csv_file = open(self._metadata_file, 'r', newline = '', encoding = self._encoding)
+            csv_file = open(self._metadata_file, 'r', newline='', encoding=self._encoding)
 
             # Try finding the dialect.
             dialect = csv.Sniffer().sniff(csv_file.read())
@@ -92,11 +94,10 @@ class CORD19CorpusReader(CorpusReader):
             csv_file.seek(0)
 
             # Setup a CSV reader on the file.
-            csv_reader = csv.DictReader(csv_file, dialect = dialect)
+            csv_reader = csv.DictReader(csv_file, dialect=dialect)
 
             # Go through each row in the metadata.
             for row in csv_reader:
-
                 # Use the cord_uid as the key and append the row.
                 # The entries are lists sense a cord_uid can appear in multiple rows.
                 metadata_dictionary[row['cord_uid']].append(row)
@@ -128,7 +129,6 @@ class CORD19CorpusReader(CorpusReader):
 
                         # Check if there's a PDF parse.
                         if (entry['pdf_json_files'] != ''):
-
                             # Set that there is.
                             has_pdf_parse = True
 
@@ -137,7 +137,6 @@ class CORD19CorpusReader(CorpusReader):
 
                         # Check if there's a PMC parse.
                         if (entry['pmc_json_files'] != ''):
-
                             # Set that there is.
                             has_pmc_parse = True
 
@@ -159,7 +158,6 @@ class CORD19CorpusReader(CorpusReader):
 
                         # Go through each file.
                         for pdf_parse_file in pdf_parses_file_list:
-
                             # Append this file to the new list.
                             new_fileids_list.append(pdf_parse_file)
 
@@ -181,7 +179,6 @@ class CORD19CorpusReader(CorpusReader):
 
                             # Go through each file.
                             for pdf_parse_file in pdf_parses_file_list:
-
                                 # Append this file to the new list.
                                 new_fileids_list.append(pdf_parse_file)
 
@@ -212,7 +209,6 @@ class CORD19CorpusReader(CorpusReader):
 
                         # Go through each file.
                         for pdf_parse_file in pdf_parses_file_list:
-
                             # Append this file to the new list.
                             new_fileids_list.append(pdf_parse_file)
 
@@ -234,7 +230,6 @@ class CORD19CorpusReader(CorpusReader):
 
                             # Go through each file.
                             for pdf_parse_file in pdf_parses_file_list:
-
                                 # Append this file to the new list.
                                 new_fileids_list.append(pdf_parse_file)
 
@@ -252,9 +247,7 @@ class CORD19CorpusReader(CorpusReader):
             # Update self._fileids to the new list.
             self._fileids = sorted(new_fileids_list)
 
-
-
-    def raw(self, fileids = None):
+    def raw(self, fileids=None):
 
         """
         :return: Returns the text of the specified files as a single string.
@@ -299,7 +292,6 @@ class CORD19CorpusReader(CorpusReader):
 
             # Check whether to include titles or not.
             if (self._include_titles):
-
                 # Concatenate the title.
                 paper += json_object['metadata']['title'] + '\n'
 
@@ -313,7 +305,6 @@ class CORD19CorpusReader(CorpusReader):
 
                     # Go through each section of the abstract.
                     for section in json_object['abstract']:
-
                         # Concatenate the section.
                         paper += section['text'] + '\n'
 
@@ -322,7 +313,6 @@ class CORD19CorpusReader(CorpusReader):
 
                 # Go through each section of the paper.
                 for section in json_object['body_text']:
-
                     # Concatenate the section.
                     paper += section['text'] + '\n'
 
@@ -332,8 +322,7 @@ class CORD19CorpusReader(CorpusReader):
         # Concatenate the items in the list and return the result.
         return concat(raw_texts)
 
-
-    def words(self, fileids = None):
+    def words(self, fileids=None):
         """
         :return: List of words and punctuation from the specified files.
         :rtype: list(str)
@@ -349,12 +338,12 @@ class CORD19CorpusReader(CorpusReader):
 
             # Do a list comprehension.
             [
-                self.CorpusView(path, self._read_word_block, encoding = encoding)
+                self.CorpusView(path, self._read_word_block, encoding=encoding)
                 for (path, encoding, fileid) in self.abspaths(fileids, True, True)
             ]
         )
 
-    def sents(self, fileids = None):
+    def sents(self, fileids=None):
         """
         :return: List of sentences from the specified files.
         :rtype: list(list(str))
@@ -362,7 +351,6 @@ class CORD19CorpusReader(CorpusReader):
 
         # Check that there's a sentence tokenizer.
         if (self._sent_tokenizer is None):
-
             # Raise an error.
             raise ValueError("No sentence tokenizer for this corpus reader")
 
@@ -371,7 +359,7 @@ class CORD19CorpusReader(CorpusReader):
 
             # Do a list comprehension.
             [
-                self.CorpusView(path, self._read_sent_block, encoding = encoding)
+                self.CorpusView(path, self._read_sent_block, encoding=encoding)
                 for (path, encoding, fileid) in self.abspaths(fileids, True, True)
             ]
         )
@@ -379,7 +367,7 @@ class CORD19CorpusReader(CorpusReader):
     # TODO: Warning! Currently, paras() treats a section of the paper as a paragraph,
     # which may or may not be acceptable. If we want to work at a paragraph level,
     # we may need to revisit this implementation and make some adjustments.
-    def paras(self, fileids = None):
+    def paras(self, fileids=None):
         """
         :return: List of paragraphs, which is each a list of sentences, which is each a list of words.
         :rtype: list(list(list(str)))
@@ -387,7 +375,6 @@ class CORD19CorpusReader(CorpusReader):
 
         # Check that there's a sentence tokenizer.
         if (self._sent_tokenizer is None):
-
             # Raise an error.
             raise ValueError("No sentence tokenizer for this corpus reader")
 
@@ -396,11 +383,10 @@ class CORD19CorpusReader(CorpusReader):
 
             # Do a list comprehension.
             [
-                self.CorpusView(path, self._read_para_block, encoding = encoding)
+                self.CorpusView(path, self._read_para_block, encoding=encoding)
                 for (path, encoding, fileid) in self.abspaths(fileids, True, True)
             ]
         )
-
 
     # def journals(self, fileids = None):
     #     """
@@ -408,13 +394,11 @@ class CORD19CorpusReader(CorpusReader):
     #     :rtype: list(str)
     #     """
 
-
     # def publish_times(self, fileids = None):
     #     """
     #     :return: List of dates the papers were published from metadata.csv.
     #     :rtype: list(str)
     #     """
-
 
     # def authors(self, fileids = None):
     #     """
@@ -424,7 +408,6 @@ class CORD19CorpusReader(CorpusReader):
     #     :rtype: list(list(str))
     #     """
 
-
     # def countries(self, fileids = None):
     #     """
     #     :return: List of countries of the authors for the papers from metadata.csv.
@@ -432,7 +415,6 @@ class CORD19CorpusReader(CorpusReader):
     #     Or, a paper might not have any authors listed.
     #     :rtype: list(list(str))
     #     """
-
 
     # def institutions(self, fileids = None):
     #     """
@@ -442,8 +424,7 @@ class CORD19CorpusReader(CorpusReader):
     #     :rtype: list(list(str))
     #     """
 
-
-    def metadata(self, fileids = None, fileids_only = True):
+    def metadata(self, fileids=None, fileids_only=True):
         """
         :return: Dictionary of metadata from metadata.csv for the specified list of files. Set fileids_only = False if you want all metadata (even if the actual paper isn't in the corpus).
         :rtype: dict(list(dict))
@@ -468,7 +449,7 @@ class CORD19CorpusReader(CorpusReader):
             metadata_dictionary = defaultdict(list)
 
             # Open the CSV file.
-            csv_file = open(self._metadata_file, 'r', newline = '', encoding = self._encoding)
+            csv_file = open(self._metadata_file, 'r', newline='', encoding=self._encoding)
 
             # Try finding the dialect.
             dialect = csv.Sniffer().sniff(csv_file.read())
@@ -477,11 +458,10 @@ class CORD19CorpusReader(CorpusReader):
             csv_file.seek(0)
 
             # Setup a CSV reader on the file.
-            csv_reader = csv.DictReader(csv_file, dialect = dialect)
+            csv_reader = csv.DictReader(csv_file, dialect=dialect)
 
             # Go through each row in the metadata.
             for row in csv_reader:
-
                 # Use the cord_uid as the key and append the row.
                 # The entries are lists sense a cord_uid can appear in multiple rows.
                 metadata_dictionary[row['cord_uid']].append(row)
@@ -496,7 +476,7 @@ class CORD19CorpusReader(CorpusReader):
             metadata_dictionary = defaultdict(list)
 
             # Open the CSV file.
-            csv_file = open(self._metadata_file, 'r', newline = '', encoding = self._encoding)
+            csv_file = open(self._metadata_file, 'r', newline='', encoding=self._encoding)
 
             # Try finding the dialect.
             dialect = csv.Sniffer().sniff(csv_file.read())
@@ -505,42 +485,38 @@ class CORD19CorpusReader(CorpusReader):
             csv_file.seek(0)
 
             # Setup a CSV reader on the file.
-            csv_reader = csv.DictReader(csv_file, dialect = dialect)
+            csv_reader = csv.DictReader(csv_file, dialect=dialect)
 
             # Go through each row in the metadata.
             for row in csv_reader:
 
                 # Check if this entry has a PCM parse file.
                 if (row['pmc_json_files'] != ''):
-
                     # Add the row to the dictionary.
                     metadata_dictionary[row['pmc_json_files']].append(row)
 
                 # Check if this row has a PDF parse file.
                 if (row['pdf_json_files'] != ''):
 
-                        # The PDF parses can actually be a list of files.
-                        # So, get the list of PDF parse files.
-                        pdf_parses_file_list = row['pdf_json_files'].split('; ')
+                    # The PDF parses can actually be a list of files.
+                    # So, get the list of PDF parse files.
+                    pdf_parses_file_list = row['pdf_json_files'].split('; ')
 
-                        # Go through each file.
-                        for pdf_parse_file in pdf_parses_file_list:
-
-                            # Add the row to the dictionary.
-                            metadata_dictionary[row['pdf_json_files']].append(row)
+                    # Go through each file.
+                    for pdf_parse_file in pdf_parses_file_list:
+                        # Add the row to the dictionary.
+                        metadata_dictionary[row['pdf_json_files']].append(row)
 
             # Make an empty dictionary to hold the metadata just for the fileids.
             fileids_metadata_dictionary = defaultdict(list)
 
             # Go through each fileid.
             for fileid in fileids:
-
                 # Add the entry for this fileid over.
                 fileids_metadata_dictionary[fileid] = metadata_dictionary[fileid]
 
             # Return the metadata for the fileids.
             return fileids_metadata_dictionary
-
 
     def statistics(self):
         """
@@ -549,7 +525,7 @@ class CORD19CorpusReader(CorpusReader):
         """
 
         # Open the CSV file.
-        csv_file = open(self._metadata_file, 'r', newline = '', encoding = self._encoding)
+        csv_file = open(self._metadata_file, 'r', newline='', encoding=self._encoding)
 
         # Try finding the dialect.
         dialect = csv.Sniffer().sniff(csv_file.read())
@@ -558,7 +534,7 @@ class CORD19CorpusReader(CorpusReader):
         csv_file.seek(0)
 
         # Setup a CSV reader on the file.
-        csv_reader = csv.DictReader(csv_file, dialect = dialect)
+        csv_reader = csv.DictReader(csv_file, dialect=dialect)
 
         unique_cord_uid_dictionary = {}
         metadata_row_count = 0
@@ -635,11 +611,8 @@ class CORD19CorpusReader(CorpusReader):
 
                     # Go through each file.
                     for pdf_parse_file in pdf_parses_file_list:
-
                         # Increment the count for total number of PDFs parses.
                         metadata_total_pdf_count += 1
-
-
 
             # Check if there is both a PMC parse for this paper.
             if (row['pmc_json_files'] != ''):
@@ -667,8 +640,7 @@ class CORD19CorpusReader(CorpusReader):
         # print('\tpmc_parse_has_more:', pmc_parse_has_more)
         # print('\tboth_parses_same:', both_parses_same)
 
-
-    def citations(self, fileids = None):
+    def citations(self, fileids=None):
         """
         :return: Returns the citations for a fileid, list of fileids, or all the fileids.
         :rtype: dict(dict)
@@ -713,14 +685,11 @@ class CORD19CorpusReader(CorpusReader):
 
             # Check whether this JSON object has a key for the citations.
             if ('bib_entries' in json_object):
-
                 # Concatenate the title.
                 citations_dictionary[fileid] = json_object['bib_entries']
 
         # Concatenate the items in the list and return the result.
         return citations_dictionary
-
-
 
     # This function is used by words() in conjunction with the StreamBackedCorpusView class.
     # Basically, it defines how to read a chunk of words from the corpus.
@@ -745,7 +714,6 @@ class CORD19CorpusReader(CorpusReader):
 
         # Check whether to include titles or not.
         if (self._include_titles):
-
             # Concatenate the title.
             paper += json_object['metadata']['title'] + '\n'
 
@@ -759,7 +727,6 @@ class CORD19CorpusReader(CorpusReader):
 
                 # Go through each section of the abstract.
                 for section in json_object['abstract']:
-
                     # Concatenate the section.
                     paper += section['text'] + '\n'
 
@@ -768,7 +735,6 @@ class CORD19CorpusReader(CorpusReader):
 
             # Go through each section of the paper.
             for section in json_object['body_text']:
-
                 # TODO: Should newlines be being added to the end?
                 # Concatenate the section.
                 paper += section['text']
@@ -778,7 +744,6 @@ class CORD19CorpusReader(CorpusReader):
 
         # Return the list of words.
         return word_list
-
 
     def _read_sent_block(self, stream):
 
@@ -797,7 +762,6 @@ class CORD19CorpusReader(CorpusReader):
 
         # Check whether to include titles or not.
         if (self._include_titles):
-
             # Add the list comprehension to the list of sentences.
             sentence_list.extend(
                 [
@@ -817,7 +781,6 @@ class CORD19CorpusReader(CorpusReader):
 
                 # Go through each section of the abstract.
                 for section in json_object['abstract']:
-
                     # Add the list comprehension to the list of sentences.
                     sentence_list.extend(
                         [
@@ -835,7 +798,6 @@ class CORD19CorpusReader(CorpusReader):
 
             # Go through all the sections in the paper.
             for section in json_object['body_text']:
-
                 # Add the list comprehension to the list of sentences.
                 sentence_list.extend(
                     [
@@ -851,7 +813,6 @@ class CORD19CorpusReader(CorpusReader):
         # Return the list of sentences.
         return sentence_list
 
-
     def _read_para_block(self, stream):
 
         # Make an empty list to hold the paragraphs.
@@ -865,7 +826,6 @@ class CORD19CorpusReader(CorpusReader):
 
         # Check whether to include titles or not.
         if (self._include_titles):
-
             # Add the list comprehension to the list of sentences.
             paragraph_list.append(
                 [
@@ -885,7 +845,6 @@ class CORD19CorpusReader(CorpusReader):
 
                 # Go through each section of the abstract.
                 for section in json_object['abstract']:
-
                     # Add the list comprehension to the list of sentences.
                     paragraph_list.append(
                         [
@@ -903,7 +862,6 @@ class CORD19CorpusReader(CorpusReader):
 
             # Go through all the sections in the paper.
             for section in json_object['body_text']:
-
                 # Add the list comprehension to the list of paragraphs.
                 paragraph_list.append(
                     [
