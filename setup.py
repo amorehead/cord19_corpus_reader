@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='CORD_19_Corpus_Reader',
-    version='0.0.1',
+    version='0.0.2',
     description='A corpus reader for the CORD-19 dataset, compatible with NLTK',
     author='Alex Morehead',
     author_email='alex.morehead@gmail.com',

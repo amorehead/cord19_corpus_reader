@@ -10,7 +10,9 @@
 
 The =CORD19CorpusReader= class is a corpus reader for the CORD-19 corpus
 (https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge).
-The idea is to be able to load the CORD-19 corpus into NLTK.
+The idea is to be able to load the CORD-19 corpus into NLTK. This project
+was originally created for Natural Language Processing (NLP) coursework
+at the University of Missouri by Jason James, Alex Morehead, and others.
 
 Documents in the CORD-19 corpus are stored as JSON files. Since the
 documents are in JSON, the parts of the paper are separated out.
