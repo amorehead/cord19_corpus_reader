@@ -20,8 +20,8 @@ A reader for the CORD-19 corpus.
 
 import csv
 import json
+
 import nltk.data
-import os
 from nltk.corpus.reader.api import *
 from nltk.corpus.reader.util import *
 from nltk.tokenize import *
