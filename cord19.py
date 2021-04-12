@@ -1,16 +1,13 @@
 ################################################################################
 #                                                                              #
-#    CS 7740/8740                                                              #
-#    Fall 2020 - Spring 2021                                                   #
+#    CS 7740                                                                   #
+#    Fall 2020                                                                 #
 #                                                                              #
 #    Class Project - CORD-19 Corpus Reader                                     #
 #    cord19.py                                                                 #
 #                                                                              #
 #    Started: Jason James                                                      #
 #    2020-9-15                                                                 #
-#                                                                              #
-#    Modified: Alex Morehead                                                   #
-#    2021-4-11                                                                 #
 #                                                                              #
 ################################################################################
 
@@ -77,6 +74,8 @@ class CORD19CorpusReader(CorpusReader):
         # Save location of the metadata.csv file.
         self._metadata_file = root + 'metadata.csv'
 
+        self._encoding = encoding
+
         # Check if don't want both PDF parses and PMC parses.
         if (not (prefer_pdf_parses and prefer_pmc_parses)):
 
@@ -84,7 +83,7 @@ class CORD19CorpusReader(CorpusReader):
             metadata_dictionary = defaultdict(list)
 
             # Open the CSV file.
-            csv_file = open(self._metadata_file, 'r', newline = '')
+            csv_file = open(self._metadata_file, 'r', newline = '', encoding = self._encoding)
 
             # Try finding the dialect.
             dialect = csv.Sniffer().sniff(csv_file.read())
@@ -469,7 +468,7 @@ class CORD19CorpusReader(CorpusReader):
             metadata_dictionary = defaultdict(list)
 
             # Open the CSV file.
-            csv_file = open(self._metadata_file, 'r', newline = '')
+            csv_file = open(self._metadata_file, 'r', newline = '', encoding = self._encoding)
 
             # Try finding the dialect.
             dialect = csv.Sniffer().sniff(csv_file.read())
@@ -497,7 +496,7 @@ class CORD19CorpusReader(CorpusReader):
             metadata_dictionary = defaultdict(list)
 
             # Open the CSV file.
-            csv_file = open(self._metadata_file, 'r', newline = '')
+            csv_file = open(self._metadata_file, 'r', newline = '', encoding = self._encoding)
 
             # Try finding the dialect.
             dialect = csv.Sniffer().sniff(csv_file.read())
@@ -550,7 +549,7 @@ class CORD19CorpusReader(CorpusReader):
         """
 
         # Open the CSV file.
-        csv_file = open(self._metadata_file, 'r', newline = '')
+        csv_file = open(self._metadata_file, 'r', newline = '', encoding = self._encoding)
 
         # Try finding the dialect.
         dialect = csv.Sniffer().sniff(csv_file.read())
