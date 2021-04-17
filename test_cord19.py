@@ -14,13 +14,11 @@
 #                                                                              #
 ################################################################################
 
-import nltk
-
 from cord19 import CORD19CorpusReader
 
 # Directory of the CORD-19 corpus.
 # Assumes the repository directory is sibling to / at the same level as the corpus directory.
-root = '../../../../data/archive/'
+root = '../../../Data/Archive/'
 
 # Make a corpus reader on everything that is a .json file in the directory.
 reader = CORD19CorpusReader(root, '.*\.json')
@@ -48,9 +46,9 @@ just_one_document = 'document_parses/pmc_json/PMC7480786.xml.json'
 
 # Let's make a list of a few file IDs.
 several_documents = ['document_parses/pdf_json/0000028b5cc154f68b8a269f6578f21e31f62977.json',
-'document_parses/pdf_json/0001418189999fea7f7cbe3e82703d71c85a6fe5.json',
-'document_parses/pmc_json/PMC7480774.xml.json',
-'document_parses/pmc_json/PMC7480786.xml.json']
+                     'document_parses/pdf_json/0001418189999fea7f7cbe3e82703d71c85a6fe5.json',
+                     'document_parses/pmc_json/PMC7480774.xml.json',
+                     'document_parses/pmc_json/PMC7480786.xml.json']
 
 print('Test fileids()')
 print(reader.fileids())
@@ -122,7 +120,7 @@ print()
 
 print('Test metadata() for All Metadata')
 # print(reader.metadata())
-metadata = reader.metadata(fileids_only = False)
+metadata = reader.metadata(fileids_only=False)
 print('len(metadata.items()):', len(metadata.items()))
 
 print()

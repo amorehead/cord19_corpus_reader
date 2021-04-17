@@ -69,11 +69,11 @@ metadata_data = '../../../../data/metadata/'
 # Setup a corpus reader.
 # include_titles = False and include_abstracts = False should omit titles and abstracts.
 # prefer_pdf_parses = True and prefer_pmc_parses = True should grab all the JSON files.
-reader = CORD19CorpusReader(root, '.*\.json', include_titles = False,
-                                              include_abstracts = False,
-                                              include_bodies = True,
-                                              prefer_pdf_parses = True,
-                                              prefer_pmc_parses = True)
+reader = CORD19CorpusReader(root, '.*\.json', include_titles=False,
+                            include_abstracts=False,
+                            include_bodies=True,
+                            prefer_pdf_parses=True,
+                            prefer_pmc_parses=True)
 
 # Print the number of files.
 # Should be 123105 + 89432 = 212537.
@@ -82,7 +82,6 @@ reader = CORD19CorpusReader(root, '.*\.json', include_titles = False,
 
 # Check if the directory for the tokenized sentences exists.
 if (not os.path.exists(sentence_data)):
-
     # Create the directory.
     os.mkdir(sentence_data)
 
@@ -93,7 +92,6 @@ if (not os.path.exists(sentence_data)):
 
 # Check if the directory for the tokenized words exists.
 if (not os.path.exists(word_data)):
-
     # Create the directory.
     os.mkdir(word_data)
 
@@ -104,7 +102,6 @@ if (not os.path.exists(word_data)):
 
 # Check if the directory for the lemmae exists.
 if (not os.path.exists(lemma_data)):
-
     # Create the directory.
     os.mkdir(lemma_data)
 
@@ -115,7 +112,6 @@ if (not os.path.exists(lemma_data)):
 
 # Check if the directory for the citations exists.
 if (not os.path.exists(citation_data)):
-
     # Create the directory.
     os.mkdir(citation_data)
 
@@ -126,7 +122,6 @@ if (not os.path.exists(citation_data)):
 
 # Check if the directory for the metadata exists.
 if (not os.path.exists(metadata_data)):
-
     # Create the directory.
     os.mkdir(metadata_data)
 
